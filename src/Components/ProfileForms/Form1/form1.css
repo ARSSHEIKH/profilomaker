@@ -1,0 +1,30 @@
+#formHeading{
+    color: rgb(255, 123, 0);
+}
+.profileForm-form1{
+    margin: 20px;
+}
+.form-group{
+    margin-top: 10px;
+}
+.input{
+    width: 100%;
+    height: 40px;
+}
+input[type=text]:focus{
+    border: blue;
+}
+#optCountries{
+    height: 40px;
+}
+.btn-signup{
+    color: #fff;
+    background-color: rgb(255, 123, 0);
+    font-weight: bold;
+    border: transparent;
+}
+.btn-signup:hover{
+    color: rgb(255, 123, 0); 
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(255, 123, 0);
+}

@@ -1,0 +1,27 @@
+.profileForm-form3{
+    margin: 20px;
+}
+.btn-signup{
+    color: #fff;
+    background-color: rgb(255, 123, 0);
+    font-weight: bold;
+    border: transparent;
+}
+.btn-signup:hover{
+    color: rgb(255, 123, 0); 
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(255, 123, 0);
+}
+.form-group{
+    margin-top: 10px;
+}
+.input{
+    width: 90%;
+    height: 40px;
+}
+input[type=text]:focus{
+    border: blue;
+}
+#textareaSummary{
+    height: 10rem;
+}

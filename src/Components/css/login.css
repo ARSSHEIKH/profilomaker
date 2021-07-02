@@ -1,0 +1,43 @@
+#required-mark{
+    float: left;
+    color: red;
+}
+.login-form{
+    max-width: 550px;
+    min-height: 250px;
+    margin: 0 auto;
+    background-color: #efefef;
+    box-shadow: 0 0 10px rgb(199, 183, 183);
+    margin-top: 50px;
+    padding: 15px 50px;
+  
+}
+.profileInputForm1{
+    border: 1px solid blue;
+}
+.form-group{
+    margin-top: 1rem;
+}
+input{
+    padding: 10px 5px;
+    width: 100%;
+}
+.btn-signup{
+    color: #fff;
+    background-color: rgb(255, 123, 0);
+    font-weight: bold;
+    border: transparent;
+    cursor: pointer;
+}
+.btn-signup:hover{
+    color: rgb(255, 123, 0);
+    background-color: rgb(255, 255, 255);
+    padding: -1px -1px -1px -1px;
+    border: 1px solid rgb(255, 123, 0);
+}
+.CreateNewAccount{
+    text-decoration: none;
+}
+.CreateNewAccount:hover{
+    text-decoration: underline;
+}

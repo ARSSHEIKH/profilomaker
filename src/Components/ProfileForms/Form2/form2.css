@@ -1,0 +1,52 @@
+.profileForm-form2{
+    margin: 2rem;
+}
+.form-group{
+    margin-top: 10px;
+}
+.GrpSocialLinks{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.form2-inputs{
+    width: 90%;
+}
+.input{
+    width: 90%;
+    height: 40px;
+}
+input[type=text]:focus{
+    border: blue;
+}
+.social-icon-svg{
+    color: rgb(120, 165, 218);
+}
+.btn-signup{
+    color: #fff;
+    background-color: rgb(255, 123, 0);
+    font-weight: bold;
+    border: transparent;
+    padding: 10px;
+}
+@media (max-width:992px){
+    .form2-inputs{
+        width: 85%
+    }
+}
+@media (max-width:770px){
+    .form2-inputs{
+        width: 80%
+    }
+}
+@media (max-width:420px){
+    .form2-inputs{
+        max-width: 70%
+    }
+}
+@media (max-width:290px){
+    .form2-inputs{
+        max-width: 60%
+    }
+}
