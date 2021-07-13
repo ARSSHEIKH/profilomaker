@@ -1,6 +1,10 @@
 .profileForm-form2{
     margin: 2rem;
 }
+#dvOne-tab:hover, #dvThree-tab:hover{
+    background-color:  rgb(255, 123, 0);
+    border: none;
+}
 .form-group{
     margin-top: 10px;
 }
@@ -10,27 +14,67 @@
     justify-content: space-between;
     flex-wrap: wrap;
 }
+.GrpSocialLinks > div{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    
+}
 .form2-inputs{
-    width: 90%;
-}
-.input{
-    width: 90%;
+    max-width: 30rem;
     height: 40px;
+    /* padding: 1rem 1rem; */
 }
-input[type=text]:focus{
-    border: blue;
+
+.dvSocialAcc{
+    margin-left: 2rem;
+}
+.GrpSocialLinks{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    min-width: 100%;
+}
+.dvProfilesLinks{
+    display: flex;
+    flex-direction: row;
+    padding: 1rem;
+    
+    max-width: 20rem;
+}
+.input_for_pfLinks{
+    width: 40rem;
+    flex: 1;
+}
+
+.social-icon-svg-fb{
+    color: #4267B2;
+}
+.social-icon-svg-twt{
+    color: #00acee;
+}
+.social-icon-svg-insta{
+    color: #c13584;
 }
 .social-icon-svg{
-    color: rgb(120, 165, 218);
+    color: #4c68d7 
 }
-.btn-signup{
+.btn-continue2{
     color: #fff;
     background-color: rgb(255, 123, 0);
     font-weight: bold;
     border: transparent;
-    padding: 10px;
+    /* padding: 10px; */
+    max-width: 20rem;
+    margin-left: 2rem;
 }
-@media (max-width:992px){
+.btn-continue2:hover{
+    color: rgb(255, 123, 0); 
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(255, 123, 0);
+}
+/* @media (max-width:992px){
     .form2-inputs{
         width: 85%
     }
@@ -49,4 +93,4 @@ input[type=text]:focus{
     .form2-inputs{
         max-width: 60%
     }
-}
+} */

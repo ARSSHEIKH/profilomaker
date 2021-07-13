@@ -1,5 +1,13 @@
 .profileForm-form3{
     margin: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.dvTwo-tab-form3:hover, .dvOne-tab-form3:hover{
+    background-color:  rgb(255, 123, 0);
+    border: none;
 }
 .btn-signup{
     color: #fff;

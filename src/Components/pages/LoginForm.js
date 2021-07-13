@@ -2,10 +2,11 @@ import { useState } from 'react';
 import "../css/login.css";
 import { firebaseConfig as firebase } from "../../firebaseConfig";
 import "firebase/auth";
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 export const LoginForm = () => {
     document.title = "Login";
+    const history = useHistory()
     const errors = {}
     const [credentials, setCredentials] = useState()
     const [credentialError, setCredentialError] = useState()
@@ -30,11 +31,11 @@ export const LoginForm = () => {
                 const getVerification = getVerified.val();
                 if (getVerification === true) {
                     setCredentials("Login Successfully");
-                    window.location.replace("/ProfileForm1");
+                    history.push("/ProfileForm1");
                 }
                 else if(getVerification === false){
                     setCredentialError("Account is not Verified !! Wait ....")
-                  window.location.replace("/VerificationPage")
+                  history.push("/VerificationPage")
                 }
 
               })
@@ -86,7 +87,7 @@ export const LoginForm = () => {
                     <div className="form-group col-md-12">
                         <input
                             type="password"
-                            className="col"
+                            className=""
                             id="loginpassword"
                             placeholder="Password"
                             value={values.password}

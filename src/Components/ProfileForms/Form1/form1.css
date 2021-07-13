@@ -1,11 +1,19 @@
 #formHeading{
     color: rgb(255, 123, 0);
 }
+
+#dvTwo-tab:hover, #dvThree-tab:hover{
+    background-color:  rgb(255, 123, 0);
+    border: none;
+}
 .profileForm-form1{
     margin: 20px;
 }
 .form-group{
     margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 .input{
     width: 100%;

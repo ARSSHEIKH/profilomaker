@@ -4,7 +4,8 @@
   "private": true,
   "main": "public/electron.js",
   "dependencies": {
-    "@material-ui/core": "^4.11.4",
+    "@material-ui/core": "^4.12.1",
+    "@material-ui/lab": "^5.0.0-alpha.39",
     "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
@@ -27,7 +28,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "package-win": "electron-packager . ProfiloMaker --overwrite --asar=true --platform=win32 --arch=ia32 --prune=true --out=release-builds --version-string.CompanyName=ARS --version-string.FileDescription=ARS --version-string.ProductName=\"ProfiloMaker\""
-
   },
   "eslintConfig": {
     "extends": [
