@@ -2,7 +2,15 @@ import { useState } from 'react';
 import countriesList from "./countriesList"
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import "./form1.css";
+import { ChangingPage } from "../ChangingPage";
+import { form1_submit } from "../../../Action/";
+
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
 
 const useStyles = makeStyles({
     root: {
@@ -59,12 +67,16 @@ const useStyles = makeStyles({
         height: "10px",
         backgroundColor: "rgb(235, 243, 235)",
         marginTop: "30px",
-    }
+    },
 });
 
 export const ProfileForm1 = () => {
     const classes = useStyles();
     const history = useHistory();
+    const dispatch = useDispatch();
+
+
+    const [countryError, setcountryError] = useState("*");
     const [values, setValues] = useState({
         fname: '',
         lname: '',
@@ -79,13 +91,27 @@ export const ProfileForm1 = () => {
         phone1: '',
         phone2: '',
     });
+    const [helperText, setHelperText] = useState('Choose wisely');
+
     const handleChange = (prop) => (event) => {
         setValues({ ...values, [prop]: event.target.value });
+
         console.log(event.target.value)
     };
     const Form1_Submit = (f1Values) => (e) => {
         e.preventDefault();
-        console.log(f1Values)
+        if (f1Values.country !== "") {
+        }
+        else {
+            setcountryError("Please fill this required field! ")
+            return
+        }
+        dispatch({
+            type: form1_submit,
+            color: "#fff",
+            bgcolor: "green",
+            submited: true
+        })
         history.push("/ProfileForm2/Submit");
     }
     return (
@@ -96,12 +122,16 @@ export const ProfileForm1 = () => {
                 </button>
                 <div className={`${classes.lineTabs} line-tabs col`}></div>
 
-                <button className={`${classes.tab2} dvTwo-tab`} id="dvTwo-tab">
+                <button className={`${classes.tab2} dvTwo-tab`} id="dvTwo-tab"
+                    onClick={() => { ChangingPage(history, "ProfileForm2") }}
+                >
                     <h3 className={`${classes.tabsStrings} tabs-strings`} id="tabs-strings">2</h3>
                 </button>
                 <div className={`${classes.lineTabs} line-tabs col`}></div>
 
-                <button className={`${classes.tab3} dvThree-tab`} id="dvThree-tab" >
+                <button className={`${classes.tab3} dvThree-tab`} id="dvThree-tab"
+                    onClick={() => { ChangingPage(history, "ProfileForm3") }}
+                >
                     <h3 className={`${classes.tabsStrings} tabs-strings`} id="tabs-strings">3</h3>
                 </button>
             </div>
@@ -122,7 +152,7 @@ export const ProfileForm1 = () => {
                                 value={values.fname}
                                 onChange={handleChange('fname')}
                             />
-                            <span id="required-mark" style={{ color: "red" }}>*</span>
+                            <span className="required-mark">*</span>
                         </div>
                         <div className="form-group col-md-6">
                             <input
@@ -134,7 +164,7 @@ export const ProfileForm1 = () => {
                                 value={values.lname}
                                 onChange={handleChange('lname')}
                             />
-                            <span id="required-mark" style={{ color: "red" }}>*</span>
+                            <span className="required-mark">*</span>
                         </div>
                         <div className="form-group">
                             <div className="form-group col-md-6">
@@ -148,37 +178,19 @@ export const ProfileForm1 = () => {
                                     value={values.email}
                                     onChange={handleChange('email')}
                                 />
-                                <span id="required-mark" style={{ color: "red" }}>*</span>
+                                <span className="required-mark">*</span>
                             </div>
                         </div>
-                        <div className="form-group">
-                            <div className="form-group col-md-6">
-                                <b>Gender : &nbsp;</b>
-                                <div className="form-check form-check-inline">
-                                    <input
-                                        className="form-check-input"
-                                        type="radio"
-                                        name="inlineRadioOptions"
-                                        id="inlineRadio1"
-                                        value={values.male}
-                                        onChange={handleChange('male')}
-                                    />
-                                    <label className="form-check-label" for="inlineRadio1">Male</label>
-                                </div>
-                                <div className="form-check form-check-inline">
-                                    <input
-                                        className="form-check-input"
-                                        type="radio"
-                                        name="inlineRadioOptions"
-                                        id="inlineRadio2"
-                                        value="female"
-                                        value={values.female}
-                                        onChange={handleChange('female')}
-                                    />
-                                    <label className="form-check-label" for="inlineRadio2">Female</label>
-                                </div>
-                            </div>
-                        </div>
+                        <br />
+                        <FormLabel component="legend" className="form-group">Gender
+                            <span className="required-mark">*</span>
+                        </FormLabel>
+                        <RadioGroup row defaultValue="male" aria-label="gender" name="customized-radios">
+                            <FormControlLabel value="male" control={<Radio />} label="Male" />
+                            <FormControlLabel value="female" control={<Radio />} label="Female" />
+                            <FormControlLabel value="other" control={<Radio />} label="Other" />
+                        </RadioGroup>
+
                         <div className="form-group">
                             <div className="form-group col-md-6">
                                 <h6>Date of Birth</h6>
@@ -192,7 +204,7 @@ export const ProfileForm1 = () => {
                                     value={values.dob}
                                     onChange={handleChange('dob')}
                                 />
-                                <span id="required-mark" style={{ color: "red" }}>*</span>
+                                <span className="required-mark">*</span>
                             </div>
                         </div>
                         <div className="form-group col-md-6">
@@ -205,7 +217,7 @@ export const ProfileForm1 = () => {
                                 value={values.address}
                                 onChange={handleChange('address')}
                             />
-                            <span id="required-mark" style={{ color: "red" }}>*</span>
+                            <span className="required-mark">*</span>
                         </div>
                         <div className="form-group">
                             <div className="form-group col-md-6">
@@ -219,7 +231,7 @@ export const ProfileForm1 = () => {
                                     value={values.city}
                                     onChange={handleChange('city')}
                                 />
-                                <span id="required-mark" style={{ color: "red" }}>*</span>
+                                <span className="required-mark">*</span>
                             </div>
                         </div>
 
@@ -227,14 +239,14 @@ export const ProfileForm1 = () => {
                             <select className="custom-select input" id="optCountries"
                                 onChange={handleChange('country')}
                             >
-                                <option value="0" selected>Select Country</option>
+                                <option value="0" disabled selected>Select Country</option>
                                 {
                                     countriesList.map((text, key) => {
                                         return <option value={text}>{text}</option>
                                     })
                                 }
                             </select>
-                            <span id="required-mark" style={{ color: "red" }}>*</span>
+                            <span className="required-mark">{countryError}</span>
                         </div>
 
                         <div className="form-group col-md-6">
@@ -247,7 +259,7 @@ export const ProfileForm1 = () => {
                                 value={values.postalcode}
                                 onChange={handleChange('postalcode')}
                             />
-                            <span id="required-mark" style={{ color: "red" }}>*</span>
+                            <span className="required-mark">*</span>
                         </div>
                         <div className="form-group col-md-6">
                             <input
@@ -259,7 +271,7 @@ export const ProfileForm1 = () => {
                                 value={values.phone1}
                                 onChange={handleChange('phone1')}
                             />
-                            <span id="required-mark" style={{ color: "red" }}>*</span>
+                            <span className="required-mark">*</span>
                         </div>
                         <div className="form-group col-md-6">
                             <input
@@ -267,14 +279,13 @@ export const ProfileForm1 = () => {
                                 className="input"
                                 id="phone2"
                                 placeholder="Contact 2"
-                                required
                                 value={values.phone2}
                                 onChange={handleChange('phone2')}
                             />
                         </div>
                         <div className="form-group col-md-6">
                             <input type="submit" className="btn-signup input" value="Continue" />
-                            <label for="error-emptyfields" id="error-emptyfields" style={{ color: "red" }}></label>
+                            <label for="error-emptyfields" id="error-emptyfields"></label>
                         </div>
                     </form>
                 </div>

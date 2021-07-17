@@ -9,13 +9,16 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import "./form2.css";
-
-
+import { ChangingPage } from "../ChangingPage"
+import { useSelector, useDispatch } from 'react-redux'
+import {form2_submit} from "../../../Action/";
 import "./form2.css"
 
 
 export const ProfileForm2 = () => {
     const history = useHistory()
+    const dispatch = useDispatch();
+    const data = useSelector((userState) => userState)
     const [values, setValues] = useState({
         DegreeLevel: '',
         CareerLevel: '',
@@ -30,10 +33,14 @@ export const ProfileForm2 = () => {
     });
 
     const [tab1Style, setTab1Style] = useState({
-        bgColor: ""
+        bgColor: "",
+        color:"rgb(0, 0, 0)"
     });
     useEffect(() => {
-        if (window.location.href.charAt(window.location.href.indexOf("S")) === "S") setTab1Style({ ...tab1Style, ["bgColor"]: "green" })
+        if (data.Form1_Submit.submited === true)
+           setTab1Style({ 
+               ...tab1Style, ["bgColor"]: data.Form1_Submit.bgcolor, ["color"]:data.Form1_Submit.color
+            })
         else setTab1Style({ ...tab1Style, ["bgColor"]: "#fff" })
     }, [])
 
@@ -60,7 +67,7 @@ export const ProfileForm2 = () => {
             borderRadius: "100px",
             fontWeight: "bold",
             fontSize: "30px",
-            color: "rgb(0, 0, 0)",
+            color: tab1Style.color,
             cursor: "pointer",
         },
         tab2: {
@@ -114,21 +121,27 @@ export const ProfileForm2 = () => {
     });
     const classes = useStyles();
 
-
     const handleChange = (prop) => (event) => {
         setValues({ ...values, [prop]: event.target.value });
         console.log(event.target.value)
     }
     const Form2_Submit = (f2Values) => (e) => {
         e.preventDefault();
+        dispatch({
+            type: form2_submit,
+            color: "#fff",
+            bgcolor: "green",
+            submited: true
+        })
         history.push("/ProfileForm3");
     }
     return (
         <>
-
             <div className={classes.root}>
                 <div className={`${classes.dvTabs} row col`}>
-                    <button className={`${classes.tab1} dvOne-tab`} id="dvOne-tab">
+                    <button className={`${classes.tab1} dvOne-tab`} id="dvOne-tab"
+                        onClick={() => { ChangingPage(history, "ProfileForm1") }}
+                    >
                         <h3 className={`${classes.tabsStrings} tabs-strings`} id="tabs-strings">1</h3>
                     </button>
                     <div className={`${classes.lineTabs} line-tabs col`}></div>
@@ -138,7 +151,9 @@ export const ProfileForm2 = () => {
                     </button>
                     <div className={`${classes.lineTabs} line-tabs col`}></div>
 
-                    <button className={`${classes.tab3} dvThree-tab`} id="dvThree-tab" >
+                    <button className={`${classes.tab3} dvThree-tab`} id="dvThree-tab"
+                        onClick={() => { ChangingPage(history, "ProfileForm3") }}
+                    >
                         <h3 className={`${classes.tabsStrings} tabs-strings`} id="tabs-strings">3</h3>
                     </button>
                 </div>

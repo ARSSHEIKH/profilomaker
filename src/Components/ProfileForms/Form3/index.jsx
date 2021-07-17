@@ -1,30 +1,48 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import "./form3.css";
-import userdp from "../../../images/user-dp.jpg"
+import userdp from "../../../images/user-dp.jpg";
 import { makeStyles } from '@material-ui/core/styles';
+import { ChangingPage } from "../ChangingPage"
+import { useSelector, useDispatch } from 'react-redux'
+import ImageUploader from "./ImageUploader"
 
 export const ProfileForm3 = () => {
+    const history = useHistory()
+    const dispatch = useDispatch();
+    const data = useSelector((userState) => userState)
+
+    console.log(data)
+
     const [profilePic, setProfilePic] = useState({
         systemUrl: "",
         createdURL: ""
     })
     const [imgUrl, setImgUrl] = useState(userdp)
-    const [displayPicture, setDisplayPicture] = useState();
+    const [displayPicture, setDisplayPicture] = useState(<img src={imgUrl} alt="" id="userProfileImg" width="100" height="100" />);
     const [summary, setSummary] = useState()
     const [tab1Style, setTab1Style] = useState({
         bgColor: "",
+        color: "rgb(0, 0, 0)",
         classname: "dvOne-tab-form3"
     });
     const [tab2Style, setTab2Style] = useState({
         bgColor: "",
+        color: "rgb(0, 0, 0)",
         classname: "dvTwo-tab-form3"
     });
 
     useEffect(() => {
-        if (window.location.href.charAt(window.location.href.indexOf("S")) === "S") {
-            setTab1Style({ ...tab1Style, ["classname"]: "" })
-            setTab2Style({ ...tab2Style, ["classname"]: "", ["bgColor"]: "green" })
+        if (data.Form1_Submit.submited === true) {
+            setTab1Style({
+                ...tab1Style, ["bgColor"]: data.Form1_Submit.bgcolor, ["color"]: data.Form1_Submit.color
+            })
+        }
+        if (data.Form2_Submit.submited === true) {
+            setTab2Style({
+                ...tab2Style,
+                ["bgColor"]: data.Form2_Submit.bgcolor, ["color"]: data.Form2_Submit.color
+            })
         }
         else {
             setTab2Style({ ...tab2Style, ["bgColor"]: "#fff" })
@@ -48,14 +66,14 @@ export const ProfileForm3 = () => {
             marginBottom: "-2rem"
         },
         tab1: {
-            backgroundColor: tab2Style.bgColor,
+            backgroundColor: tab1Style.bgColor,
             border: "3px solid rgb(203, 209, 203)",
             maxWidth: "70px",
             height: "70px",
             borderRadius: "100px",
             fontWeight: "bold",
             fontSize: "30px",
-            color: "rgb(0, 0, 0)",
+            color: tab1Style.color,
             cursor: "pointer",
             disabled: "true"
         },
@@ -67,7 +85,7 @@ export const ProfileForm3 = () => {
             borderRadius: "100px",
             fontWeight: "bold",
             fontSize: "30px",
-            color: "rgb(0, 0, 0)",
+            color: tab2Style.color,
             cursor: "pointer",
         },
         tab3: {
@@ -119,12 +137,16 @@ export const ProfileForm3 = () => {
 
             <div className={classes.root}>
                 <div className={`${classes.dvTabs} row col`}>
-                    <button className={`${classes.tab1} ${tab1Style.classname}`} id="dvOne-tab-form3">
+                    <button className={`${classes.tab1} ${tab1Style.classname}`} id="dvOne-tab-form3"
+                        onClick={() => { ChangingPage(history, "ProfileForm1") }}
+                    >
                         <h3 className={`${classes.tabsStrings} tabs-strings`} id="tabs-strings">1</h3>
                     </button>
                     <div className={`${classes.lineTabs} line-tabs col`}></div>
 
-                    <button className={`${classes.tab2} ${tab2Style.classname}`} id="dvTwo-tab-form3">
+                    <button className={`${classes.tab2} ${tab2Style.classname}`} id="dvTwo-tab-form3"
+                        onClick={() => { ChangingPage(history, "ProfileForm2") }}
+                    >
                         <h3 className={`${classes.tabsStrings} tabs-strings`} id="tabs-strings">2</h3>
                     </button>
                     <div className={`${classes.lineTabs} line-tabs col`}></div>
@@ -141,6 +163,7 @@ export const ProfileForm3 = () => {
                         {displayPicture}
                     </div>
 
+                    {/* <ImageUploader /> */}
                     <div class="mb-3">
                         <label for="formFileSm" class="form-label">Select your own photograph size picture</label>
                         <input
