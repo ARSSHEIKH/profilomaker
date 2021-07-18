@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { InputLabel, Input, Button, FormControl } from '@material-ui/core/';
 import { firebaseConfig as firebase } from "../../firebaseConfig"
 import { Link, useHistory } from 'react-router-dom';
-import {fromVerificationPage} from "../SetToLocalStorage"
+import { fromVerificationPage } from "../SetToLocalStorage"
 
 let gEmail, gPassword;
 
@@ -13,13 +13,12 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "column",
         alignItems: "center",
         flexWrap: "wrap",
-        marginTop: 40,
-        padding: 40
+        padding: 40,
+        maxWidth: "40rem"
     },
     root: {
         '& > *': {
             margin: theme.spacing(1),
-            width: '25ch',
         },
     },
 }));
@@ -68,28 +67,33 @@ export default function VerificationPage() {
     return (
         <div className="login-form">
             <h4>Please Verify your Account</h4>
-            <form className={classes.root}
-            onSubmit={fromVerificationPage(values.email)}
+            <form className={classes.mainRoot}
+                onSubmit={fromVerificationPage(values.email)}
             >
-                <FormControl>
-                    <InputLabel htmlFor="my-input">Email address</InputLabel>
-                    <Input
-                        id="my-input"
-                        type="email"
-                        aria-describedby="my-helper-text"
-                        required
-                        onChange={handleChange('email')}
-                    />
-                </FormControl>
-                <br />
-                <Link to="/">Login</Link>
-                <Button
-                    type="Submit"
-                    variant="contained"
-                    color="primary"
-                    // onClick={SetToLocalStorage(values.email)}
-                >
-                    Send</Button>
+                <div>
+                    <FormControl>
+                        <InputLabel htmlFor="my-input">Email address</InputLabel>
+                        <Input
+                            id="my-input"
+                            type="email"
+                            aria-describedby="my-helper-text"
+                            required
+                            onChange={handleChange('email')}
+                        />
+                        <br/>
+                        <Button
+                            type="Submit"
+                            variant="contained"
+                            color="primary"
+                        // onClick={SetToLocalStorage(values.email)}
+                        >
+                            Send
+                        </Button>
+                    </FormControl>
+                </div>
+                <div>
+                    <Link to="/">Login Instead ?</Link>
+                </div>
             </form>
         </div>
     )

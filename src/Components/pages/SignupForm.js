@@ -4,7 +4,7 @@ import "../css/login.css";
 // import AddUser from "../FbDB/AddToDB/AddUserToDB";
 import { firebaseConfig } from "../../firebaseConfig";
 import { Link, useHistory } from 'react-router-dom';
-import {SetToLocalStorage} from "../SetToLocalStorage"
+import { SetToLocalStorage } from "../SetToLocalStorage"
 import "firebase/auth";
 
 export const SignupForm = () => {
@@ -27,46 +27,59 @@ export const SignupForm = () => {
     const validate = (values) => {
         let checkValidation = false
         if (!values.email) {
-            errors.email = '*';
+            errors.email = '';
         } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
             errors.email = 'Invalid email address';
             checkValidation = false;
         }
         else checkValidation = true;
         if (!values.password) {
-            errors.password = '*';
+            errors.password = '';
         }
         // else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.password)) {
         //     errors.password = 'Invalid password address';
         // }
         if (!values.confPass) {
-            errors.confPass = '*';
+            errors.confPass = '';
         }
         // else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.confPass)) {
         //     errors.confPass = 'Invalid Confirm Password';
         // }
-        else if(values.password !== values.confPass){
+        else if (values.password !== values.confPass) {
             errors.confPass = 'Password doesnot match';
             checkValidation = false;
         }
         else checkValidation = true;
-        
+
         return checkValidation;
     };
-    const valuesvalidate= validate(userValues)
-    const FormSubmit = async(event) => {
+    const valuesvalidate = validate(userValues)
+    const FormSubmit = async (event) => {
         event.preventDefault();
         setCredentials("Loading ...")
         setPassError("")
-        if(valuesvalidate === true){
-        
+        if (valuesvalidate === true) {
             firebaseConfig.auth().createUserWithEmailAndPassword(userValues.email, userValues.password)
-            .then((userCredential) => {
-                
-                firebaseConfig.database().ref('/profiloUsers/user' + (userCredential.user.uid)).update(userValues)
-                .then((result) => {
-                    console.log(result)
-                    
+                .then((userCredential) => {
+                    firebaseConfig.database().ref('/profiloUsers/user' + (userCredential.user.uid)).update(userValues)
+                        .then((result) => {
+                        })
+                        .catch((error) => {
+                            var errorCode = error.code;
+                            var errorMessage = error.message;
+                            console.log(errorCode)
+                            console.log(errorMessage)
+                            setPassError(errorMessage)
+                            setCredentials("")
+                        });
+                    setTimeout(() => {
+                        setCredentials("Register Successfully !")
+                        SetToLocalStorage(userValues.email, userValues.password)
+                        // history.push("/VerificationPage") 
+                        // window.location("http://localhost:3000/VerificationPage")
+                        // window.open('http://localhost:3000/VerificationPage', '_blank', 'top=500,left=200,frame=false,nodeIntegration=no')
+
+                    }, 5000);
                 })
                 .catch((error) => {
                     var errorCode = error.code;
@@ -76,24 +89,8 @@ export const SignupForm = () => {
                     setPassError(errorMessage)
                     setCredentials("")
                 });
-                setTimeout(() => {
-                    setCredentials("Register Successfully !")
-                    SetToLocalStorage(userValues.email, userValues.password)
-                    // history.push("/VerificationPage") 
-                    // window.location("http://localhost:3000/VerificationPage")
-                    // window.open('http://localhost:3000/VerificationPage', '_blank', 'top=500,left=200,frame=false,nodeIntegration=no')
-
-                }, 5000);
-            })
-            .catch((error) => {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                console.log(errorCode)
-                console.log(errorMessage)
-                setPassError(errorMessage)
-                setCredentials("")
-            });
         }
+        else setCredentials("")
     }
     return (
         <>
@@ -103,9 +100,8 @@ export const SignupForm = () => {
 
                     <form id="profileInputForm1" onSubmit={FormSubmit} method="GET">
                         <div className="form-group">
-                            <div className="form-group col-md-12"> 
-                            <span id="required-mark">{errors.email && errors.email}</span>
-
+                            <div className="form-group col-md-12">
+                                <span id="required-mark">{errors.email}</span>
                                 <input
                                     type="email"
                                     id="email"
@@ -122,7 +118,6 @@ export const SignupForm = () => {
                         <div className="form-group">
                             <div className="form-group col-md-12">
                                 <span id="required-mark">{errors.password}</span>
-
                                 <input
                                     type="password"
                                     name="password"
@@ -152,9 +147,9 @@ export const SignupForm = () => {
                         <div className="form-group  col-md-12">
                             <input type="submit" className="btn-signup btn-lg" value="Register" />
                             <label id="error-emptyfields"></label>
-                            <br/><span id="">{credentials}</span>
+                            <br /><span id="">{credentials}</span>
                         </div>
-                        <br/><span id="required-mark">{passError}</span>
+                        <br /><span id="required-mark">{passError}</span>
                         <div className="form-group col-md-12">
                             <Link to="/" className="CreateNewAccount">Login Instead?</Link>
                         </div>

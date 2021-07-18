@@ -5,7 +5,6 @@ import userdp from "../../../images/user-dp.jpg";
 import { makeStyles } from '@material-ui/core/styles';
 import { ChangingPage } from "../ChangingPage"
 import { useSelector, useDispatch } from 'react-redux'
-import ImageUploader from "./ImageUploader"
 
 export const ProfileForm3 = () => {
     const history = useHistory()
@@ -124,7 +123,7 @@ export const ProfileForm3 = () => {
     const Form3_Submit = (e) => {
         e.preventDefault();
         console.log(profilePic, summary)
-        // window.location.replace("/MainProfile")
+        window.location.replace("/MainProfile")
     }
     useEffect(() => {
         setDisplayPicture(
@@ -162,8 +161,6 @@ export const ProfileForm3 = () => {
                     <div class="mb-3">
                         {displayPicture}
                     </div>
-
-                    {/* <ImageUploader /> */}
                     <div class="mb-3">
                         <label for="formFileSm" class="form-label">Select your own photograph size picture</label>
                         <input
