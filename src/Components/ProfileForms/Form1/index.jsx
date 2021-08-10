@@ -11,6 +11,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
+import axios from 'axios';
 
 const useStyles = makeStyles({
     root: {
@@ -74,15 +75,14 @@ export const ProfileForm1 = () => {
     const classes = useStyles();
     const history = useHistory();
     const dispatch = useDispatch();
-
-
+    var urlParams = localStorage.getItem("user_id")
+    console.log(urlParams)
     const [countryError, setcountryError] = useState("*");
     const [values, setValues] = useState({
         fname: '',
         lname: '',
         email: '',
-        male: 'male',
-        female: 'female',
+        gender: 'male',
         dob: '',
         address: '',
         city: '',
@@ -90,12 +90,11 @@ export const ProfileForm1 = () => {
         postalcode: '',
         phone1: '',
         phone2: '',
+        user_id: urlParams
     });
-    const [helperText, setHelperText] = useState('Choose wisely');
 
     const handleChange = (prop) => (event) => {
         setValues({ ...values, [prop]: event.target.value });
-
         console.log(event.target.value)
     };
     const Form1_Submit = (f1Values) => (e) => {
@@ -112,7 +111,23 @@ export const ProfileForm1 = () => {
             bgcolor: "green",
             submited: true
         })
-        history.push("/ProfileForm2/Submit");
+        axios.post(`http://localhost:3200/add_profile/user/:${urlParams}/form1`, values)
+            .then((res) => {
+                console.log(res)
+                if (res.status === 201)
+                    history.push("/ProfileForm2/Submit");
+            })
+            .catch(() => {
+                axios.post(`http://localhost:3200/update_profile/user/form1`, values)
+                    .then((res) => {
+                        console.log(res)
+                        if (res.status === 201)
+                            history.push("/ProfileForm2/Submit");
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            })
     }
     return (
         <div className={classes.root}>
@@ -182,10 +197,12 @@ export const ProfileForm1 = () => {
                             </div>
                         </div>
                         <br />
-                        <FormLabel component="legend" className="form-group">Gender
+                        <FormLabel component="legend" className="form-group">
+                            Gender
                             <span className="required-mark">*</span>
                         </FormLabel>
-                        <RadioGroup row defaultValue="male" aria-label="gender" name="customized-radios">
+                        <RadioGroup row defaultValue="male" aria-label="gender" name="customized-radios"
+                            onChange={handleChange('gender')}>
                             <FormControlLabel value="male" control={<Radio />} label="Male" />
                             <FormControlLabel value="female" control={<Radio />} label="Female" />
                             <FormControlLabel value="other" control={<Radio />} label="Other" />

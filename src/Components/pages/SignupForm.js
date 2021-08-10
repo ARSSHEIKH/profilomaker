@@ -5,9 +5,12 @@ import "../css/login.css";
 import { firebaseConfig } from "../../firebaseConfig";
 import { Link, useHistory } from 'react-router-dom';
 import { SetToLocalStorage } from "../SetToLocalStorage"
+import axios from 'axios'
 import "firebase/auth";
 
+
 export const SignupForm = () => {
+    document.title = "Signup";
     const errors = {}
     const history = useHistory();
     const [credentials, setCredentials] = useState()
@@ -62,7 +65,18 @@ export const SignupForm = () => {
             firebaseConfig.auth().createUserWithEmailAndPassword(userValues.email, userValues.password)
                 .then((userCredential) => {
                     firebaseConfig.database().ref('/profiloUsers/user' + (userCredential.user.uid)).update(userValues)
-                        .then((result) => {
+                        .then(() => {
+                            axios.post("http://localhost:3200/registeration", {
+                                email: userValues.email,
+                                password: userValues.password,
+                                verified: false
+                            }
+                            ).then((res) => {
+                                console.log(res)
+                                setCredentials("Register Successfully !")
+                                SetToLocalStorage(userValues.email, history)
+                            })
+                                .catch((err) => console.log(err))
                         })
                         .catch((error) => {
                             var errorCode = error.code;
@@ -72,14 +86,6 @@ export const SignupForm = () => {
                             setPassError(errorMessage)
                             setCredentials("")
                         });
-                    setTimeout(() => {
-                        setCredentials("Register Successfully !")
-                        SetToLocalStorage(userValues.email, userValues.password)
-                        // history.push("/VerificationPage") 
-                        // window.location("http://localhost:3000/VerificationPage")
-                        // window.open('http://localhost:3000/VerificationPage', '_blank', 'top=500,left=200,frame=false,nodeIntegration=no')
-
-                    }, 5000);
                 })
                 .catch((error) => {
                     var errorCode = error.code;

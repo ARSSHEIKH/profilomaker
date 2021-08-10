@@ -11,17 +11,19 @@ import TextField from '@material-ui/core/TextField';
 import "./form2.css";
 import { ChangingPage } from "../ChangingPage"
 import { useSelector, useDispatch } from 'react-redux'
-import {form2_submit} from "../../../Action/";
+import { form2_submit } from "../../../Action/";
 import "./form2.css"
+import axios from 'axios';
 
 
 export const ProfileForm2 = () => {
     const history = useHistory()
     const dispatch = useDispatch();
     const data = useSelector((userState) => userState)
+    var urlParams = localStorage.getItem("user_id")
     const [values, setValues] = useState({
-        DegreeLevel: '',
-        CareerLevel: '',
+        degreeLevel: '',
+        careerLevel: '',
         experience: '',
         designation: '',
         pfCity: '',
@@ -29,17 +31,18 @@ export const ProfileForm2 = () => {
         fbProfile: '',
         inProfile: '',
         twtProfile: '',
-        otherProfile: ''
+        otherProfile: '',
+        user_id: urlParams
     });
 
     const [tab1Style, setTab1Style] = useState({
         bgColor: "",
-        color:"rgb(0, 0, 0)"
+        color: "rgb(0, 0, 0)"
     });
     useEffect(() => {
         if (data.Form1_Submit.submited === true)
-           setTab1Style({ 
-               ...tab1Style, ["bgColor"]: data.Form1_Submit.bgcolor, ["color"]:data.Form1_Submit.color
+            setTab1Style({
+                ...tab1Style, ["bgColor"]: data.Form1_Submit.bgcolor, ["color"]: data.Form1_Submit.color
             })
         else setTab1Style({ ...tab1Style, ["bgColor"]: "#fff" })
     }, [])
@@ -125,7 +128,8 @@ export const ProfileForm2 = () => {
         setValues({ ...values, [prop]: event.target.value });
         console.log(event.target.value)
     }
-    const Form2_Submit = (f2Values) => (e) => {
+    const Form2_Submit = (e) => {
+        var urlParams = localStorage.getItem("user_id")
         e.preventDefault();
         dispatch({
             type: form2_submit,
@@ -133,7 +137,23 @@ export const ProfileForm2 = () => {
             bgcolor: "green",
             submited: true
         })
-        history.push("/ProfileForm3");
+        axios.post(`http://localhost:3200/add_profile/user/:${urlParams}/form2`, values)
+            .then((res) => {
+                console.log(res)
+                if (res.status === 201)
+                    history.push("/ProfileForm3/Submit");
+            })
+            .catch((err) =>{
+                axios.post(`http://localhost:3200/update_profile/user/form2`, values)
+                    .then((res) => {
+                        console.log(res)
+                        if (res.status === 201)
+                            history.push("/ProfileForm3/Submit");
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            })
     }
     return (
         <>
@@ -159,7 +179,7 @@ export const ProfileForm2 = () => {
                 </div>
 
                 <div className="" id="profileForm-form2">
-                    <form onSubmit={Form2_Submit(values)}>
+                    <form onSubmit={Form2_Submit}>
                         {/* <h2>Form 2</h2> */}
 
                         <div className={classes.dvSelectOpt}>
@@ -167,15 +187,15 @@ export const ProfileForm2 = () => {
                                 <InputLabel htmlFor="degreeLevel-native-required">Degree Level</InputLabel>
                                 <Select
                                     native
-                                    // value={state.degreeLevel}
-                                    // onChange={handleChange}
+                                    value={values.degreeLevel}
+                                    onChange={handleChange('degreeLevel')}
                                     name="degreeLevel"
                                     inputProps={{
                                         id: 'degreeLevel-native-required',
                                     }}
                                 >
                                     {degreeLevelList.map((text, key) => {
-                                        return <option value={text}>{text}</option>
+                                        return <option value={text} key={key}>{text}</option>
                                     })}
 
                                 </Select>
@@ -186,8 +206,8 @@ export const ProfileForm2 = () => {
                                 <InputLabel htmlFor="careerLevel-native-required">Career Level</InputLabel>
                                 <Select
                                     native
-                                    // value={state.careerLevel}
-                                    // onChange={handleChange}
+                                    value={values.careerLevel}
+                                    onChange={handleChange('careerLevel')}
                                     name="careerLevel"
                                     inputProps={{
                                         id: 'careerLevel-native-required',
@@ -205,13 +225,13 @@ export const ProfileForm2 = () => {
                             </FormControl>
 
                             <FormControl required className={`${classes.formControl} ${classes.inpSelects} form-control`}>
-                                <InputLabel htmlFor="careerLevel-native-required">Experience Level</InputLabel>
+                                <InputLabel htmlFor="experience-native-required">Experience Level</InputLabel>
                                 <Select
                                     native
-                                    // value={state.careerLevel}
-                                    name="careerLevel"
+                                    value={values.experience}
+                                    name="experience"
                                     inputProps={{
-                                        id: 'careerLevel-native-required',
+                                        id: 'experience-native-required',
                                     }}
                                     onChange={handleChange('experience')}
                                 >
@@ -271,8 +291,8 @@ export const ProfileForm2 = () => {
                                         className="input_for_pfLinks"
                                         id="SocialLink1"
                                         placeholder="Faceook Profile"
-                                    // value={socialValues.fbProfile}
-                                    // onChange={handleChangeSocialAcc('fbProfile')}
+                                        value={values.fbProfile}
+                                        onChange={handleChange('fbProfile')}
                                     />
                                 </div>
 
@@ -289,8 +309,8 @@ export const ProfileForm2 = () => {
                                         className="input_for_pfLinks"
                                         id="SocialLink2"
                                         placeholder="Twitter Profile"
-                                    // value={socialValues.twtProfile}
-                                    // onChange={handleChangeSocialAcc('twtProfile')}
+                                        value={values.twtProfile}
+                                        onChange={handleChange('twtProfile')}
                                     />
                                 </div>
 
@@ -306,8 +326,8 @@ export const ProfileForm2 = () => {
                                         className="input_for_pfLinks"
                                         id="SocialLink2"
                                         placeholder="Linkedin Profile"
-                                    // value={socialValues.inProfile}
-                                    // onChange={handleChangeSocialAcc('inProfile')}
+                                        value={values.inProfile}
+                                        onChange={handleChange('inProfile')}
                                     />
                                 </div>
 
@@ -324,8 +344,8 @@ export const ProfileForm2 = () => {
                                         className="input_for_pfLinks"
                                         id="SocialLink4"
                                         placeholder="Other Social Profile ..."
-                                    // value={socialValues.otherProfile}
-                                    // onChange={handleChangeSocialAcc('otherProfile')}
+                                        value={values.otherProfile}
+                                        onChange={handleChange('otherProfile')}
                                     />
                                 </div>
 

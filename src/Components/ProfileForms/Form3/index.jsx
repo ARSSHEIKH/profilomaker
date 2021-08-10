@@ -5,20 +5,22 @@ import userdp from "../../../images/user-dp.jpg";
 import { makeStyles } from '@material-ui/core/styles';
 import { ChangingPage } from "../ChangingPage"
 import { useSelector, useDispatch } from 'react-redux'
+import axios from 'axios';
 
 export const ProfileForm3 = () => {
     const history = useHistory()
     const dispatch = useDispatch();
     const data = useSelector((userState) => userState)
-
-    console.log(data)
+    var urlParams = localStorage.getItem("user_id")
 
     const [profilePic, setProfilePic] = useState({
         systemUrl: "",
         createdURL: ""
     })
     const [imgUrl, setImgUrl] = useState(userdp)
-    const [displayPicture, setDisplayPicture] = useState(<img src={imgUrl} alt="" id="userProfileImg" width="100" height="100" />);
+    const [displayPicture, setDisplayPicture] = useState(
+        <img src={imgUrl} alt="" id="userProfileImg" width="100" height="100"
+        />);
     const [summary, setSummary] = useState()
     const [tab1Style, setTab1Style] = useState({
         bgColor: "",
@@ -110,20 +112,57 @@ export const ProfileForm3 = () => {
     const classes = useStyles();
 
     const profilePicHandleChange = (event) => {
-        setProfilePic({
-            systemUrl: event.target.files[0].path,
-            createdURL: URL.createObjectURL(event.target.files[0])
-        });
-        setImgUrl(profilePic.createdURL)
-        console.log(profilePic)
+        console.log(event.target.files[0])
+        try {
+            setProfilePic({
+                systemUrl: event.target.files[0],
+                createdURL: URL.createObjectURL(event.target.files[0])
+            });
+            setImgUrl(URL.createObjectURL(event.target.files[0]))
+        } catch {
+            setImgUrl(userdp)
+
+            setProfilePic({
+                systemUrl: "",
+                createdURL: ""
+            });
+        }
     }
     const summaryHandleChange = (event) => {
         setSummary(event.target.value);
     }
     const Form3_Submit = (e) => {
         e.preventDefault();
-        console.log(profilePic, summary)
-        window.location.replace("/MainProfile")
+        const formdata = new FormData();
+        formdata.append("summary", summary)
+        formdata.append("profile_pic", profilePic.systemUrl)
+        formdata.append("user_id", urlParams)
+
+        // window.location.replace("/MainProfile")
+        for (var pair of formdata.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
+        }
+
+        axios.post(`http://localhost:3200/add_profile/user/${urlParams}/form3`, formdata, {
+            "headers": { 'Content-Type': 'multipart/form-data' }
+        })
+            .then((res) => {
+                console.log(res)
+                if (res.status === 201) history.push("/MainProfile");
+            })
+            .catch(() => {
+                axios.post(`http://localhost:3200/update_profile/user/form3`, formdata, {
+                    "headers": { 'Content-Type': 'multipart/form-data' }
+                })
+                    .then((res) => {
+                        console.log(res)
+                        if (res.status === 201)
+                            history.push("/MainProfile");
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            })
     }
     useEffect(() => {
         setDisplayPicture(

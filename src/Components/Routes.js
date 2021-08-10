@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { LoginForm } from "./pages/LoginForm"
 import {SignupForm} from "./pages/SignupForm"
-import {MainProfile} from "./pages/profile"
+import {MainProfile} from "./pages/Profile/"
 import { ProfileForm1 } from "./ProfileForms/Form1/"
 import { ProfileForm2 } from "./ProfileForms/Form2/"
 import { ProfileForm3 } from "./ProfileForms/Form3/"

@@ -3,6 +3,8 @@ import "../css/login.css";
 import { firebaseConfig as firebase } from "../../firebaseConfig";
 import "firebase/auth";
 import { Link, useHistory } from 'react-router-dom';
+import axios from 'axios'
+import LinearProgressBar from "../ProgressBars/LinearProgressBar"
 
 export const LoginForm = () => {
     document.title = "Login";
@@ -22,37 +24,60 @@ export const LoginForm = () => {
         e.preventDefault();
         setCredentials("Loading ...")
         setCredentialError("")
-        console.log(userValues.email, userValues.password)
-        firebase.auth().signInWithEmailAndPassword(userValues.email, userValues.password)
-          .then((userCredential) => {
-              console.log(userCredential)
-              firebase.database().ref(`profiloUsers/user${userCredential.user.uid}/verified`)
-              .on("value",function (getVerified) {
-                const getVerification = getVerified.val();
-                if (getVerification === true) {
-                    setCredentials("Login Successfully");
-                    history.push("/ProfileForm1");
+        axios.get(`http://localhost:3200/users/${userValues.email}`)
+            .then((res) => {
+                console.log(res)
+                if (res.data.password === userValues.password) {
+                    if (res.data.verified === true) {
+                        setCredentials("Login Successfully");
+                        localStorage.setItem("user_id", res.data._id)
+                        history.push(`/ProfileForm1`);
+                    }
+                    else {
+                        setCredentials("");
+                        setCredentialError("Please verify your account, Verification Email was send you")
+                    }
                 }
-                else if(getVerification === false){
-                    setCredentialError("Account is not Verified !! Wait ....")
-                  history.push("/VerificationPage")
+                else {
+                    setCredentials("");
+                    setCredentialError("Invalid Email or Password")
                 }
+            })
+            .catch((err) => {
+                console.log(err)
+                setCredentials("");
+                setCredentialError("Email not available")
+                // history.push("/VerificationPage")
+            })
+        // firebase.auth().signInWithEmailAndPassword(userValues.email, userValues.password)
+        //     .then((userCredential) => {
+        //         firebase.database().ref(`profiloUsers/user${userCredential.user.uid}/verified`)
+        //             .on("value", function (getVerified) {
+        //                 const getVerification = getVerified.val();
+        //                 if (getVerification === true) {
+        //                     setCredentials("Login Successfully");
+        //                     history.push("/ProfileForm1");
+        //                 }
+        //                 else if (getVerification === false) {
+        //                     setCredentialError("Account is not Verified !! Wait ....")
+        //                     history.push("/VerificationPage")
+        //                 }
 
-              })
-          })
-          .catch((error)=>{
-            setCredentials("")
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.log(errorCode)
-            console.log(errorMessage)
-            if(errorMessage === "There is no user record corresponding to this identifier. The user may have been deleted.")
-                setCredentialError("Email address or password not correct !")
-            else if(errorMessage === "The password is invalid or the user does not have a password.")
-                setCredentialError("Email address or password not correct !")
-            else 
-                setCredentialError(errorMessage)
-          })
+        //             })
+        //     })
+        //     .catch((error) => {
+        //         setCredentials("")
+        //         var errorCode = error.code;
+        //         var errorMessage = error.message;
+        //         console.log(errorCode)
+        //         console.log(errorMessage)
+        //         if (errorMessage === "There is no user record corresponding to this identifier. The user may have been deleted.")
+        //             setCredentialError("Email address or password not correct !")
+        //         else if (errorMessage === "The password is invalid or the user does not have a password.")
+        //             setCredentialError("Email address or password not correct !")
+        //         else
+        //             setCredentialError(errorMessage)
+        //     })
     }
 
     const validate = (values) => {
@@ -64,7 +89,7 @@ export const LoginForm = () => {
             checkValidation = false;
         }
     }
-    const valuesvalidate= validate(values)
+    const valuesvalidate = validate(values)
     return (
         <div className="container">
             <div className="login-form" id="login-form">
@@ -98,12 +123,15 @@ export const LoginForm = () => {
                     </div>
                     <div className="form-group col-md-12">
                         <input type="submit" className="btn-signup btn-lg" value="Login" />
-                        <br/><span id="">{credentials}</span>
+                        <br /><span id="">{credentials}</span>
                     </div>
-                    <br/><span id="required-mark">{credentialError}</span>
-                    <div className="form-group"></div>
-                    <Link to="/signup" className="CreateNewAccount">Or create new one?</Link>
-
+                    <br />
+                    <span id="required-mark"
+                        style={{fontSize: "12px", fontWeight:"bold"}}
+                    >{credentialError}</span><br />
+                    <div>
+                        <Link to="/signup" className="CreateNewAccount">Or create new one?</Link>
+                    </div>
                 </form>
             </div>
         </div>

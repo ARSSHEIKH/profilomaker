@@ -3,7 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { InputLabel, Input, Button, FormControl } from '@material-ui/core/';
 import { firebaseConfig as firebase } from "../../firebaseConfig"
 import { Link, useHistory } from 'react-router-dom';
-import { fromVerificationPage } from "../SetToLocalStorage"
+import { fromVerificationPage } from "../SetToLocalStorage";
+import axios from "axios"
 
 let gEmail, gPassword;
 
@@ -37,7 +38,6 @@ export default function VerificationPage() {
 
     function emailLinkComplete() {
         if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
-            // var email = window.localStorage.getItem('emailForSignIn');
             const urlParams = window.location.href;
             urlParams.indexOf("apiKey")
             const email = urlParams.slice(54, urlParams.indexOf("?apiKey"));
@@ -47,19 +47,29 @@ export default function VerificationPage() {
                 return
             }
             else {
-                firebase.database().ref('profiloUsers').orderByChild('email').equalTo(email).on("value", function (snapshot) {
-                    const getVal = snapshot.val();
-                    const getId = Object.keys(getVal)
-                    console.log(getVal)
-                    firebase.database().ref(`profiloUsers/${getId}`).update({ verified: true, id: getId })
-                        .then(() => {
-                            history.push("/")
-                            // window.localStorage.removeItem("emailForSignIn");
-                        })
-                        .catch((err) => {
-                            console.log(err)
-                        })
+
+                axios.post(`http://localhost:3200/update_user/${email}`, {
+                    verified: true
+                }).then(() => {
+                    history.push("/")
+                    window.localStorage.removeItem("emailForSignIn");
                 })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+                // firebase.database().ref('profiloUsers').orderByChild('email').equalTo(email).on("value", function (snapshot) {
+                //     const getVal = snapshot.val();
+                //     const getId = Object.keys(getVal)
+                //     console.log(getVal)
+                //     firebase.database().ref(`profiloUsers/${getId}`).update({ verified: true, id: getId })
+                //         .then(() => {
+                //             history.push("/")
+                //             // window.localStorage.removeItem("emailForSignIn");
+                //         })
+                //         .catch((err) => {
+                //             console.log(err)
+                //         })
+                // })
             }
         }
     }
@@ -80,7 +90,7 @@ export default function VerificationPage() {
                             required
                             onChange={handleChange('email')}
                         />
-                        <br/>
+                        <br />
                         <Button
                             type="Submit"
                             variant="contained"
